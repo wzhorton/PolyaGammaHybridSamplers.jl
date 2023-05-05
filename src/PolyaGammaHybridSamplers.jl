@@ -1,6 +1,7 @@
 module PolyaGammaHybridSamplers
 
 using Distributions
+using Random
 
 export PolyaGammaHybridSampler
 
