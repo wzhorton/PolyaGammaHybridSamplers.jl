@@ -76,7 +76,7 @@ end
 function rand_pghybrid(b::Integer, z::Real, rng::AbstractRNG)
     if b > 170
         return rand_pgnormalapprox(b, z, rng)
-    elseif b > 13
+    elseif b >= 13
         return rand_pgsaddlepoint(b, z, rng)
     elseif b > 0
         return rand_pgdevroye(b, z, rng)
