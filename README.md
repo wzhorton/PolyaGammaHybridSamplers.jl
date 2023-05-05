@@ -50,13 +50,13 @@ pg = PolyaGammaHybridSampler(4, 1.5)
 data = rand(pg)
 ```
 
---**The current plan is for the hybrid sampler to require integers for the $b$ parameter**.-- However, the underlying *normal approximation* and *saddle-point sampler* routines do support non-integer inputs. Additionally, the type of sampler can controlled by including, for example, `PGSamplingMethod.saddlepoint` as an argument: 
+--**The current plan is for the hybrid sampler to require integers for the $b$ parameter**.-- However, the underlying *normal approximation* and *saddle-point sampler* routines do support non-integer inputs. Additionally, the type of sampler can controlled by including, for example, `SADDLEPOINT` as an argument: 
 
 ```julia
-pg = PolyaGammaHybridSampler(4, 1.5, PGSamplingMethod.saddlepoint)
+pg = PolyaGammaHybridSampler(4, 1.5, SADDLEPOINT)
 data = rand(pg)
 ```
-Other valid options include `hybrid`, `devroye`, and `normalapprox`. But be careful as no warning about the approximation quality or efficiency will be given.
+Other valid options include `HYBRID`, `DEVROYE`, and `NORMALAPPROX`. But be careful as no warning about the approximation quality or efficiency will be given.
 
 Perhaps in the future the *approximate technique* or the *gamma mixture* sampler will be implemented, maybe even with some clever multiple dispatching. However, this seems unlikely given that the vast majority of applications using the Pólya-Gamma distribution involve integer $b$, not to mention that the efficiency benefits of the *alternative technique* are pretty small and the fact that truncating the gamma mixture is "dangerous" according to [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001).
 

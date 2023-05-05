@@ -9,8 +9,7 @@ The method used is determined by the the `method` parameter, which defaults to `
 - `b::Integer`: The shape parameter of the Polya-Gamma distribution. Must be positive.
 - `z::Real`: The exponential tilting parameter of the Polya-Gamma distribution.
 - `method::PGSamplingMethod : An Enum object specifying the method used to sample from the Polya-Gamma distribution. 
-    Must be one of `PGSamplingMethod.hybrid`, `PGSamplingMethod.devroye`, 
-    `PGSamplingMethod.saddlepoint`, or `PGSamplingMethod.normalapprox`.
+    Must be one of `HYBRID`, `DEVROYE`, `SADDLEPOINT`, or `NORMALAPPROX`. Defaults to `HYBRID` when not specified.
 
 # Returns
 - A `PolyaGammaHybridSampler` object which can be sampled using `rand` or `rand!`.
@@ -21,12 +20,7 @@ The method used is determined by the the `method` parameter, which defaults to `
 #----------------------------------#
 
 # Define the sampler type
-@enum PGSamplingMethod begin
-    hybrid
-    devroye
-    saddlepoint
-    normalapprox
-end
+@enum PGSamplingMethod HYBRID DEVROYE SADDLEPOINT NORMALAPPROX
 
 struct PolyaGammaHybridSampler{T <: Real, N <: Integer} <: Sampleable{Univariate, Continuous}
     b::N
@@ -43,7 +37,7 @@ end
 
 # Define the outer constuctors 
 function PolyaGammaHybridSampler(b::Integer, z::Real)
-    PolyaGammaHybridSampler(b, z, PGSamplingMethod.HYBRID)
+    PolyaGammaHybridSampler(b, z, HYBRID)
 end
 
 function PolyaGammaHybridSampler(b::Integer, z::Real, method::PGSamplingMethod)
@@ -65,13 +59,13 @@ end
 #----------------------------------#
 
 function Base.rand(rng::AbstractRNG, sampler::PolyaGammaHybridSampler)
-    if sampler.method == PGSamplingMethod.HYBRID
+    if sampler.method == HYBRID
         return rand_pghybrid(sampler.b, sampler.z, rng)
-    elseif sampler.method == PGSamplingMethod.DEVROYE
+    elseif sampler.method == DEVROYE
         return rand_pgdevroye(sampler.b, sampler.z, rng)
-    elseif sampler.method == PGSamplingMethod.SADDLEPOINT
+    elseif sampler.method == SADDLEPOINT
         return rand_pgsaddlepoint(sampler.b, sampler.z, rng)
-    else # sampler.method = PGSamplingMethod.NORMALAPPROX
+    else # sampler.method = NORMALAPPROX
         return rand_pgnormalapprox(sampler.b, sampler.z, rng)
     end
 end
