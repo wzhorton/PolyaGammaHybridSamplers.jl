@@ -42,26 +42,34 @@ end
 
 # Define mean and variance
 function Distributions.mean(s::PolyaGammaHybridSampler)
-    return s.b * inv(2.0*s.z) * tanh(s.z/2.0)
+    if iszero(s.z)
+        return zero(s.z)
+    else
+        return s.b * tanh(s.z/2.0) * tanh(s.z/2.0)
+    end
 end
 
 function Distributions.var(s::PolyaGammaHybridSampler)
-    return s.b * inv(4.0*s.z^2) * (sinh(s.z)-s.z) * sech(s.z/2.0)^2
+    if iszero(s.z)
+        return inv(24.0)
+    else
+        return s.b * inv(4.0*s.z^3) * (sinh(s.z)-s.z) * sech(s.z/2.0)^2
+    end
 end
 
 #----------------------------------#
 # Define rand hybrid methods
 #----------------------------------#
 
-function Base.rand(rng::AbstractRNG, sampler::PolyaGammaHybridSampler)
-    if sampler.method == HYBRID
-        return rand_pghybrid(sampler.b, sampler.z, rng)
-    elseif sampler.method == DEVROYE
-        return rand_pgdevroye(sampler.b, sampler.z, rng)
-    elseif sampler.method == SADDLEPOINT
-        return rand_pgsaddlepoint(sampler.b, sampler.z, rng)
+function Base.rand(rng::AbstractRNG, s::PolyaGammaHybridSampler)
+    if s.method == HYBRID
+        return rand_pghybrid(s.b, s.z, rng)
+    elseif s.method == DEVROYE
+        return rand_pgdevroye(s.b, s.z, rng)
+    elseif s.method == SADDLEPOINT
+        return rand_pgsaddlepoint(s.b, s.z, rng)
     else # sampler.method = NORMALAPPROX
-        return rand_pgnormalapprox(sampler.b, sampler.z, rng)
+        return rand_pgnormalapprox(s.b, s.z, rng)
     end
 end
 
