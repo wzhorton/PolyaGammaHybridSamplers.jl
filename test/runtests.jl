@@ -1,6 +1,7 @@
-using PolyaGammaHybridSamplers
 using Test
+using Random
+using Distributions
+using PolyaGammaHybridSamplers
+import PolyaGammaHybridSamplers: PGSamplingMethod
 
-@testset "PolyaGammaHybridSamplers.jl" begin
-    # Write your tests here.
-end
+include("PolyaGammaHybridSamplers_test.jl")
