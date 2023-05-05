@@ -40,11 +40,6 @@ function PolyaGammaHybridSampler(b::Integer, z::Real)
     PolyaGammaHybridSampler(b, z, HYBRID)
 end
 
-function PolyaGammaHybridSampler(b::Integer, z::Real, method::PGSamplingMethod)
-    PolyaGammaHybridSampler(b, z, method)
-end
-
-
 # Define mean and variance
 function Distributions.mean(s::PolyaGammaHybridSampler)
     return s.b * inv(2.0*s.z) * tanh(s.z/2.0)
