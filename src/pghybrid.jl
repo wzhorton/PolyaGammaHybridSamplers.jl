@@ -45,7 +45,7 @@ function Distributions.mean(s::PolyaGammaHybridSampler)
     if iszero(s.z)
         return zero(s.z)
     else
-        return s.b * tanh(s.z/2.0) * tanh(s.z/2.0)
+        return s.b * inv(2.0*s.z) * tanh(s.z/2.0)
     end
 end
 
