@@ -3,7 +3,7 @@ module PolyaGammaHybridSamplers
 using Distributions
 using Random
 
-export PolyaGammaHybridSampler
+export PolyaGammaHybridSampler, PGSamplingMethod
 
 include("rand_pgdevroye.jl")
 include("rand_pgsaddlepoint.jl")

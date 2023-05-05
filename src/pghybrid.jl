@@ -8,16 +8,12 @@ The method used is determined by the the `method` parameter, which defaults to `
 # Arguments
 - `b::Integer`: The shape parameter of the Polya-Gamma distribution. Must be positive.
 - `z::Real`: The exponential tilting parameter of the Polya-Gamma distribution.
-- `method::AbstractString`: The method used to sample from the Polya-Gamma distribution. 
-    Must be one of `"hybrid"`, `"devroye"`, `"saddlepoint"`, or `"normalapprox"`.
+- `method::PGSamplingMethod : An Enum object specifying the method used to sample from the Polya-Gamma distribution. 
+    Must be one of `PGSamplingMethod.hybrid`, `PGSamplingMethod.devroye`, 
+    `PGSamplingMethod.saddlepoint`, or `PGSamplingMethod.normalapprox`.
 
 # Returns
 - A `PolyaGammaHybridSampler` object which can be sampled using `rand` or `rand!`.
-
-# Notes
-- The `method` parameter is case-sensitive.
-- The `method` parameter might not type-stable, so it is recommended to use the `PolyaGammaHybridSampler(b, z)` constructor
-    instead of `PolyaGammaHybridSampler(b, z, method)`.
 """
 
 #----------------------------------#
@@ -26,10 +22,10 @@ The method used is determined by the the `method` parameter, which defaults to `
 
 # Define the sampler type
 @enum PGSamplingMethod begin
-    HYBRID = "hybrid"
-    DEVROYE = "devroye"
-    SADDLEPOINT = "saddlepoint"
-    NORMALAPPROX = "normalapprox"
+    hybrid
+    devroye
+    saddlepoint
+    normalapprox
 end
 
 struct PolyaGammaHybridSampler{T <: Real, N <: Integer} <: Sampleable{Univariate, Continuous}
@@ -37,11 +33,11 @@ struct PolyaGammaHybridSampler{T <: Real, N <: Integer} <: Sampleable{Univariate
     z::T
     method::PGSamplingMethod
 
-    function PolyaGammaHybridSampler(b::N, z::T, method::PGSamplingMethod)
+    function PolyaGammaHybridSampler(b::N, z::T, method::PGSamplingMethod) where {T <: Real, N <: Integer}
         if b < zero(b) 
             throw(DomainError("b must be positive"))
         end
-        new(b, z, method)
+        new{T,N}(b, z, method)
     end
 end
 
@@ -50,8 +46,8 @@ function PolyaGammaHybridSampler(b::Integer, z::Real)
     PolyaGammaHybridSampler(b, z, PGSamplingMethod.HYBRID)
 end
 
-function PolyaGammaHybridSampler(b::Integer, z::Real, method::AbstractString)
-    PolyaGammaHybridSampler(b, z, PGSamplingMethod(method))
+function PolyaGammaHybridSampler(b::Integer, z::Real, method::PGSamplingMethod)
+    PolyaGammaHybridSampler(b, z, method)
 end
 
 
