@@ -6,7 +6,7 @@
 [![Coverage](https://codecov.io/gh/wzhorton/PolyaGammaHybridSamplers.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/wzhorton/PolyaGammaHybridSamplers.jl)
 
 
-`PolyaGammaHybridSamplers.jl` is a Julia package that implements a hybrid sampling approach for the Pólya-Gamma distribution. The Pólya-Gamma distribution is a continuous distribution on the real number line and is most often used for latent variable augmentation in models like logistic regression or logit stick-breaking processes. It is parameterized by two values, $b > 0$ and $z\in\mathbb{R}$, and is often assigned the distributional notation $PG(b,z)$. An excellent tutorial on using the Pólya-Gamma distribution can be found at this [blog post](https://gregorygundersen.com/blog/2019/09/20/polya-gamma/) by Gregory Gunderson.
+`PolyaGammaHybridSamplers.jl` is a Julia package that implements a hybrid sampling approach for the Pólya-Gamma distribution. The Pólya-Gamma distribution is a continuous distribution on the positive real number line and is most often used for latent variable augmentation in models like logistic regression or logit stick-breaking processes. It is parameterized by two values, $b > 0$ and $z\in\mathbb{R}$, and is often assigned the distributional notation $PG(b,z)$. An excellent tutorial on using the Pólya-Gamma distribution can be found at this [blog post](https://gregorygundersen.com/blog/2019/09/20/polya-gamma/) by Gregory Gunderson.
 
 # Background Details
 
@@ -50,12 +50,13 @@ pg = PolyaGammaHybridSampler(4, 1.5)
 data = rand(pg)
 ```
 
---**The current plan is for the hybrid sampler to require integers for the $b$ parameter**.-- However, the *normal approximation* and *saddle-point sampler* routines do support non-integer inputs and can be accessed directly using the `method` keyword, which also ignores the integer check:
+--**The current plan is for the hybrid sampler to require integers for the $b$ parameter**.-- However, the underlying *normal approximation* and *saddle-point sampler* routines do support non-integer inputs. Additionally, the type of sampler can controlled by including one of `"hybrid", "devroye", "saddlepoint", "normalapprox"` as an argument: 
 
 ```julia
-pg = PolyaGammaHybridSampler(4.5, 1.5; method = "saddlepoint") # no error
+pg = PolyaGammaHybridSampler(4, 1.5, "saddlepoint")
 data = rand(pg)
 ```
+But be careful as no warning about the approximation quality or efficiency will be given.
 
 Perhaps in the future the *approximate technique* or the *gamma mixture* sampler will be implemented, maybe even with some clever multiple dispatching. However, this seems unlikely given that the vast majority of applications using the Pólya-Gamma distribution involve integer $b$, not to mention that the efficiency benefits of the *alternative technique* are pretty small and the fact that truncating the gamma mixture is "dangerous" according to [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001).
 
