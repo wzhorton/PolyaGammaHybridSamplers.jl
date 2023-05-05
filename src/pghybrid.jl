@@ -75,11 +75,11 @@ end
 
 function rand_pghybrid(b::Integer, z::Real, rng::AbstractRNG)
     if b > 170
-        return pgnormalapprox(b, z, rng)
+        return rand_pgnormalapprox(b, z, rng)
     elseif b > 13
-        return pgsaddlepoint(b, z, rng)
+        return rand_pgsaddlepoint(b, z, rng)
     elseif b > 0
-        return pgdevroye(b, z, rng)
+        return rand_pgdevroye(b, z, rng)
     else # b = 0 -> degenerate distribution at 0
         return zero(b)
     end
