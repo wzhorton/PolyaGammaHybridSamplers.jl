@@ -10,7 +10,13 @@
 
 # Background Details
 
-The class of Pólya-Gamma distributions was first presented in a paper by [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001). There no closed-form expression for the $PG(b,z)$ density function $f$, but is rather defined through its Laplace transform: $\mathcal{L}_f(t) = \cosh^{-b}(\sqrt{t/2})$. This can be derived from an alternative definition where the $PG(b,z)$ distribution is represented as an infinite mixture of gamma variables. The authors comment that a naive approach to sampling could be to generate atruncated number of gamma values and combine them using the mixture formula, but they warn that this approximation is both inefficient and potentially dangerous. 
+The class of Pólya-Gamma distributions was first presented in a paper by [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001). There no closed-form expression for the $PG(b,z)$ density function $f$, but is rather defined through its Laplace transform: 
+
+$$
+\mathcal{L}_f(t) = \frac{\cosh^b(\frac{z}{2})}{\cosh^b\left(\sqrt{\frac{z^2/2 + t}{2}}\right)}
+$$
+
+This can be derived from an alternative definition where the $PG(b,z)$ distribution is represented as an infinite mixture of gamma variables. The authors comment that a naive approach to sampling could be to generate atruncated number of gamma values and combine them using the mixture formula, but they warn that this approximation is both inefficient and potentially dangerous. 
 
 In order to develop an effecient yet exact sampling method, the authors drew connections to a subclass of $J^*$ distributions discussed in [Devroye (2009)](https://www.sciencedirect.com/science/article/pii/S0167715209002867). The ultimate conclusion is an extremely efficient rejection sampler, called the *Devroye method*, that is used to simulate from a $PG(1,z)$ distribution. If $b$ is an integer, then the $PG(b,z)$ distribution can be drawn by summing $b$ independent draws from the $PG(1,z)$ distribution.
 
