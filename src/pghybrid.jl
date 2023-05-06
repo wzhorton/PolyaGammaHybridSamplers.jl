@@ -41,7 +41,7 @@ function PolyaGammaHybridSampler(b::Integer, z::Real)
 end
 
 # Define mean and variance
-pg_mean = function(b::Integer, z::Real)
+pg_mean = function(b::Real, z::Real)
     if iszero(z)
         return zero(z)
     else
@@ -49,7 +49,7 @@ pg_mean = function(b::Integer, z::Real)
     end
 end
 
-pg_var = function(b::Integer, z::Real)
+pg_var = function(b::Real, z::Real)
     if iszero(z)
         return inv(24.0)
     else
