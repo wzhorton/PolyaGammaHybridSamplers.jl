@@ -18,5 +18,7 @@ Sample from a Polya-Gamma distribution using the normal approximation method.
 """
 
 function rand_pgnormalapprox(b::Real, z::Real, rng::AbstractRNG)
-    # TO DO
+    mu = pg_mean(b, z)
+    sigma = sqrt(pg_var(b, z))
+    return rand(rng, Normal(mu, sigma))
 end
