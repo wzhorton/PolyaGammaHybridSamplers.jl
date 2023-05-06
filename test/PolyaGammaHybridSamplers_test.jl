@@ -79,7 +79,7 @@ end
 # No test on rand_pghybrid as it is just a wrapper for the other rand_ functions
 
 # Run tests
-@testset "Sampling method tests" begin
+@testset "Sampling method tests for hybrid" begin
     test_rand_b0_hybrid()
 end
 

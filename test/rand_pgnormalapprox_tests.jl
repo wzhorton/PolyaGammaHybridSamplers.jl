@@ -8,7 +8,7 @@ function test_rand_b0_normalapprox()
 end
 
 # Run tests
-@testset "Sampling method tests" begin
+@testset "Sampling method tests for normal approx" begin
     test_rand_b0_normalapprox()
 end
 

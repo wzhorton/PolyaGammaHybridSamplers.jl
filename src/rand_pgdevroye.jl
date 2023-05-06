@@ -16,9 +16,9 @@ Sample from a Polya-Gamma distribution using the Devroye method.
 """
 
 function rand_pgdevroye(b::Integer, z::Real, rng::AbstractRNG)
-    if iszero(b)
+    if iszero(b) # b = 0 -> degenerate distribution at 0
         return zero(z)
-    end
+    end 
 
     draw  = zero(z)
     for _ in Base.OneTo(b)
