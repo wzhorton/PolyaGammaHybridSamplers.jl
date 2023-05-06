@@ -41,21 +41,24 @@ function PolyaGammaHybridSampler(b::Integer, z::Real)
 end
 
 # Define mean and variance
-function Distributions.mean(s::PolyaGammaHybridSampler)
-    if iszero(s.z)
-        return zero(s.z)
+pg_mean = function(b::Integer, z::Real)
+    if iszero(z)
+        return zero(z)
     else
-        return s.b * inv(2.0*s.z) * tanh(s.z/2.0)
+        return b * inv(2.0*z) * tanh(z/2.0)
     end
 end
 
-function Distributions.var(s::PolyaGammaHybridSampler)
-    if iszero(s.z)
+pg_var = function(b::Integer, z::Real)
+    if iszero(z)
         return inv(24.0)
     else
-        return s.b * inv(4.0*s.z^3) * (sinh(s.z)-s.z) * sech(s.z/2.0)^2
+        return b * inv(4.0*z^3) * (sinh(z)-z) * sech(z/2.0)^2
     end
 end
+
+Distributions.mean(s::PolyaGammaHybridSampler) = pg_mean(s.b, s.z)
+Distributions.var(s::PolyaGammaHybridSampler) = pg_var(s.b, s.z)
 
 #----------------------------------#
 # Define rand hybrid methods
