@@ -5,3 +5,4 @@ using PolyaGammaHybridSamplers
 import PolyaGammaHybridSamplers: PGSamplingMethod
 
 include("PolyaGammaHybridSamplers_test.jl")
+include("rand_pgnormalapprox_tests.jl")
