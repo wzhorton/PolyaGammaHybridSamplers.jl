@@ -22,7 +22,7 @@ function rand_pgdevroye(b::Integer, z::Real, rng::AbstractRNG)
 
     draw  = zero(z)
     for _ in Base.OneTo(b)
-        draw += rand_Jstar(0.5*z, rng) * 0.25
+        draw += rand_Jstar(0.5*abs(z), rng) * 0.25
     end
     return draw
 end
@@ -37,7 +37,7 @@ function rand_Jstar(z::Real, rng::AbstractRNG)
     t = 0.64 # paper recommends this constant
     K = 0.125*π^2 + 0.5*z^2
     p = 0.5*π*inv(K) * exp(-t*K)
-    q = 2*exp(-abs(z)) * cdf(InverseGaussian(inv(abs(z)), 1.0), t)
+    q = 2*exp(-z) * cdf(InverseGaussian(inv(z), 1.0), t)
     while true
         # Generate X
         if rand(rng, Uniform(0.0, 1.0)) < p/(p+q) #U ~ Uniform(0,1)
@@ -50,7 +50,7 @@ function rand_Jstar(z::Real, rng::AbstractRNG)
             # the loop also never terminates, probably due to underflow in a_coefs().
             # z + 0.0001 is a hack to address the case where z = 0. In the future,
             # Algorithms 2 and 3 of Polson et al. 2013 should be implemented to fix this.
-            X = rand(rng, truncated(InverseGaussian(inv(abs(z)+0.0001), 1.0); upper = t))
+            X = rand(rng, truncated(InverseGaussian(inv(z+0.0001), 1.0); upper = t))
         end
         # Accumulate a(X) to S
         S = a_coefs(0, X, t)
