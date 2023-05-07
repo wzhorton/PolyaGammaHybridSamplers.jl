@@ -1,6 +1,7 @@
 using Test
 using Random
 using Distributions
+using SpecialFunctions
 using PolyaGammaHybridSamplers
 import PolyaGammaHybridSamplers: PGSamplingMethod
 
