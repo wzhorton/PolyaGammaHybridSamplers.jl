@@ -32,6 +32,12 @@ end
 # which is available at https://github.com/jwindle/BayesLogit/blob/master/src/
 # To help with organization, helper functions are organized by the file they originally appeared in.
 
+# Future refactoring could be done to make this code more Julia-like and easier to read, but 
+# that will be an extremely difficult task. The original code is quite complex and almost none of the
+# formulas are documented or written down; the paper only derives a generic saddlepoint sampler and the
+# original C++ does not have any comments or references for the multitude of formulas it uses. This is
+# the main reason why this file is a translation of the original code rather than a reimplementation.
+
 #---------------------------------#
 # Main function for Jstar tilted
 # PolyaGammaApproxSP.cpp
@@ -100,6 +106,7 @@ function rand_Jstar_tilted(b::Real, z::Real, rng::AbstractRNG)
 
     return b * X
 end
+
 
 #--------------------------------#
 # Helper Functions: InvertY.cpp
