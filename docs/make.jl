@@ -1,3 +1,5 @@
+# Build locally with `julia --project=docs/ docs/make.jl`
+
 using PolyaGammaHybridSamplers
 using Documenter
 
@@ -16,6 +18,7 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Getting Started" => "getting_started.md",
     ],
 )
 
