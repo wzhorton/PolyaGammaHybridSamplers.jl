@@ -13,15 +13,14 @@ The method used is determined by the the `method` parameter, which defaults to `
 
 # Returns
 - A `PolyaGammaHybridSampler` object which can be sampled using `rand` or `rand!`.
+
+# Examples
+```jldoctest
+julia> using PolyaGammaHybridSamplers
+julia> s = PolyaGammaHybridSampler(1, 1.0)
+PolyaGammaHybridSampler{Float64,Int64}(1, 1.0, HYBRID)
+```
 """
-
-#----------------------------------#
-# Define sampler objects
-#----------------------------------#
-
-# Define the sampler type
-@enum PGSamplingMethod HYBRID DEVROYE SADDLEPOINT NORMALAPPROX
-
 struct PolyaGammaHybridSampler{T <: Real, N <: Integer} <: Sampleable{Univariate, Continuous}
     b::N
     z::T
@@ -34,6 +33,11 @@ struct PolyaGammaHybridSampler{T <: Real, N <: Integer} <: Sampleable{Univariate
         new{T,N}(b, z, method)
     end
 end
+
+
+#----------------------------------#
+# Define sampler objects
+#----------------------------------#
 
 # Define the outer constuctors 
 function PolyaGammaHybridSampler(b::Integer, z::Real)

@@ -14,7 +14,6 @@ Sample from a Polya-Gamma distribution using the Devroye method.
 # Notes
 - This method is exact, but is increasingly slower as `b` increases.
 """
-
 function rand_pgdevroye(b::Integer, z::Real, rng::AbstractRNG)
     if iszero(b) # b = 0 -> degenerate distribution at 0
         return zero(z)
