@@ -10,6 +10,8 @@ SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
 [compat]
 julia = "1.8"
+Distributions = "0.25.80 - 0.25.89"
+SpecialFunctions = "1.8.8 - 2.2.0"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
