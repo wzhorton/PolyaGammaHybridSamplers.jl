@@ -15,10 +15,10 @@ The method used is determined by the the `method` parameter, which defaults to `
 - A `PolyaGammaHybridSampler` object which can be sampled using `rand` or `rand!`.
 
 # Examples
-```jldoctest
+```julia
 julia> using PolyaGammaHybridSamplers
 julia> s = PolyaGammaHybridSampler(1, 1.0)
-PolyaGammaHybridSampler{Float64,Int64}(1, 1.0, HYBRID)
+julia> rand(s)
 ```
 """
 struct PolyaGammaHybridSampler{T <: Real, N <: Integer} <: Sampleable{Univariate, Continuous}
