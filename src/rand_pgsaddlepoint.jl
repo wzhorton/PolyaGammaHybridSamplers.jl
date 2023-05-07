@@ -27,51 +27,6 @@ function rand_pgsaddlepoint(b::Real, z::Real, rng::AbstractRNG)
     return rand_Jstar_tilted(b, 0.5*abs(z), rng) * 0.25
 end
 
-"""
-Note that we are sampling from the tilted J^*(b,z)
-
-phi_z(x) = concave dual of K_z(t) = K(s) - s*x where s is plugged in to minimize the expression.
-K(t) = cumulant generating function = log MGF = log E[exp(tX)]
-M(t) = cosh^b(z/2) / cosh^b(sqrt((c^2/2 - t)/2) = cosh^b(z/2) * cosh^-b(1/2 * sqrt(c^2 - 2t))
-K'(t) = (b/2)*tanh(1/2 * sqrt(c^2 - 2t)) / sqrt(c^2 - 2t)
-
-m = mode of phi_z(x) = argmax_x phi_z(x) = tanh(z)/z
-
-sp_n(x|z) = saddle point approximation of f.
-    = sqrt(n/2pi) K''(t(x))^(-1/2) * exp(n*phi_z(x))
-where t(x) = argmax_t K(t) - t*x
-    t(x) = 1/2 * sqrt(c^2 - 2x)
-    K''(t) = (b/4) * (c^2 - 2t) * sech^2(1/2 * sqrt(c^2 - 2t)) / (c^2 - 2t)^(3/2)
-    K''(t(x)) = (b/4) * sech^2(1/2 * sqrt(c^2 - 2x)) / (c^2 - 2x)
-    sp_n(x|z) = sqrt(n/2pi) * (b/4)^(1/2) * sech(1/2 * sqrt(c^2 - 2x)) / (c^2 - 2x)^(3/4) * exp(n*phi_z(x))
-
-eta(x) = phi(x) - delta(x)
-delta(x) = 1/2*(1/xc + 1/x) if x <= xc, otherwise log(x) - log(xc)
-
-k(x|n,z) = sqrt(n/2pi) * cases:
-    x < xc: 1/sqrt(alpha_l) * exp(n/(2xc)) * x^(-3/2) * exp(-n/(2x) + nLl(x|z))
-    x > xc: 1/sqrt(alpha_r) * xc^n * x^(n-1) * exp(nLr(x|z))
-
-the left side is inverse Gaussian while the right is gamma.
-=> k_left is inverse Gaussian with mu = 1/sqrt(pl) and lambda = n,
-    pl = -2Ll'(x)
-   k_right is gamma with shape = n, rate = npr
-    pr = -Lr'(x)
-
-MAIN ALGO:
-xl = m, xc = 1.1 * m, xr = 1.2 * m
-calculate the tangent lines of eta at xl and xr: call them Ll(x|z) and Lr(x|z).
-proposal g is propto k which is mixture of 2 parts: inverse Gaussian and gamma.
-
-Draw X from g,
-draw U from Unif(0, k(X))
-if U < sp_n(X|z), accept X, otherwise reject X.
-
-    ---
-
-a lot of what I wrote above is slightly inaccurate. The Jstar tilted distribution is what we are sampling from
-and it has a MGF of cosh^b(z)*cosh^-b(sqrt(z^2 - 2t)).
-"""
 
 # The following code is almost a direct translation of the C++ code from the original BayesLogit package,
 # which is available at https://github.com/jwindle/BayesLogit/blob/master/src/
