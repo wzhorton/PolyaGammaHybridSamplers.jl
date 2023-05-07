@@ -15,6 +15,7 @@ Sample from a Polya-Gamma distribution using the saddlepoint approximation metho
 - This method is an approximation, but very efficient for large `b`.
 - This method is recommended for `b > 13`, however no warning is given if `b` is too small.
 - This method supports non-integer `b`.
+- This function is not exported.
 """
 function rand_pgsaddlepoint(b::Real, z::Real, rng::AbstractRNG)
     if iszero(b) # b = 0 -> degenerate distribution at 0

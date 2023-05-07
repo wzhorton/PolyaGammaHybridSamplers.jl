@@ -80,6 +80,29 @@ function Base.rand(rng::AbstractRNG, s::PolyaGammaHybridSampler)
     end
 end
 
+
+"""
+    rand_pghybrid(b::Integer, z::Real, rng::AbstractRNG)
+
+Sample from a Polya-Gamma distribution using the hybrid selection method.
+
+# Arguments
+- `b::Integer`: the shape parameter
+- `z::Real`: the exponential tilting parameter
+- `rng::AbstractRNG`: random number generator object for `rand`
+
+# Returns
+- A sample from the Polya-Gamma distribution with shape parameter `b` and exponential tilting parameter `z`.
+
+# Notes
+- This method depends on the other rand_* methods in this package.
+- Selection criteria: 
+    - `b > 170` -> `rand_pgnormalapprox`
+    - `b >= 13` -> `rand_pgsaddlepoint`
+    - `b > 0` -> `rand_pgdevroye`
+    - `b = 0` -> degenerate distribution at 0
+- This function is not exported.
+"""
 function rand_pghybrid(b::Integer, z::Real, rng::AbstractRNG)
     if b > 170
         return rand_pgnormalapprox(b, z, rng)
