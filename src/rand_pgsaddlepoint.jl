@@ -73,7 +73,7 @@ function rand_Jstar_tilted(b::Real, z::Real, rng::AbstractRNG)
     wl = exp(0.5 * log(al) - b * rt2rl + b * il + 0.5 * b * inv(md)) *
          p_igauss(md, inv(rt2rl), b)
 
-    wr = exp(0.5 * log(ar) + lcn + (-b * log(b * rr) + b * ir - b * log(md) + lgamma(b))) *
+    wr = exp(0.5 * log(ar) + lcn + (-b * log(b * rr) + b * ir - b * log(md) + loggamma(b))) *
          (1.0 - cdf(Gamma(b, inv(b*rr)), md))
 
     wt = wl + wr
