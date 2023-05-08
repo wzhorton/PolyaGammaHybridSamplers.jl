@@ -207,8 +207,8 @@ function v_eval(y)
     id = 10*(log(y) / log(2.0) + 4.0)
     idlow = Int(floor(id))
     idhigh = Int(ceil(id))
-    vl = VGRID[idlow]
-    vh = VGRID[idhigh]
+    vl = VGRID[idlow+1]
+    vh = VGRID[idhigh+1]
 
     iter = 0
     diff = tol + 1.0
@@ -303,7 +303,7 @@ function rtigauss(mu, lambda, trunc, rng::AbstractRNG)
     X = trunc + 1.0
     if trunc < mu
         alpha = 0.0
-        while rand() > alpha
+        while rand(rng) > alpha
             X = rtinvchi2(lambda, trunc, rng)
             alpha = exp(-0.5 * lambda * inv(mu^2) * X)
         end
