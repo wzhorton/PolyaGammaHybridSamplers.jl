@@ -1,21 +1,9 @@
 name: CompatHelper
 on:
   schedule:
-    - cron: 0 0 * * *
+    - cron: 0 0 * * 5
   workflow_dispatch:
-permissions:
-  actions: read
-  checks: read
-  contents: write
-  deployments: read
-  issues: read
-  discussions: read
-  packages: read
-  pages: read
-  pull-requests: write
-  repository-projects: read
-  security-events: read
-  statuses: read
+permissions: read-all|write-all
 jobs:
   CompatHelper:
     runs-on: ubuntu-latest
