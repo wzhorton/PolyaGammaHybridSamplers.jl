@@ -10,7 +10,7 @@
 
 # Background Details
 
-The class of Pólya-Gamma distributions was first presented in a paper by [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001). There no closed-form expression for the $PG(b,z)$ density function $f$, but is rather defined through its Laplace transform: 
+The class of Pólya-Gamma distributions was first presented in a paper by [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001). There is no closed-form expression for the $PG(b,z)$ density function $f$, but is rather defined through its Laplace transform: 
 
 $$
 \mathcal{L}_f(t) = \frac{\cosh^b(\frac{z}{2})}{\cosh^b\left(\sqrt{\frac{z^2/2 + t}{2}}\right)}
