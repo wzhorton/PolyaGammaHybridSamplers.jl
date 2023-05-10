@@ -46,10 +46,9 @@ function rand_Jstar(z::Real, rng::AbstractRNG)
         else
             # Draw inverseGaussian(1/z, 1) truncated below t
             # WARNING: This implementation is unstable. For z ≈ 0, an infinite loop occurs
-            # due to the InverseGaussian parameter being infinite. For large z (>400 ish),
-            # the loop also never terminates, probably due to underflow in a_coefs().
-            # z + 0.0001 is a hack to address the case where z = 0. In the future,
-            # Algorithms 2 and 3 of Polson et al. 2013 should be implemented to fix this.
+            # due to the InverseGaussian parameter being infinite. z + 0.0001 is a hack to 
+            # address the case where z = 0. In the future, Algorithms 2 and 3 of 
+            # Polson et al. 2013 should be implemented to fix this.
             X = rand(rng, truncated(InverseGaussian(inv(z+0.0001), 1.0); upper = t))
         end
         # Accumulate a(X) to S
