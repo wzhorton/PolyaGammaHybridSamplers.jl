@@ -47,7 +47,7 @@ end
 # Define mean and variance
 pg_mean = function(b::Real, z::Real)
     if iszero(z)
-        return zero(z)
+        return b / 4.0
     else
         return b * inv(2.0*z) * tanh(z/2.0)
     end
@@ -55,7 +55,7 @@ end
 
 pg_var = function(b::Real, z::Real)
     if iszero(z)
-        return inv(24.0)
+        return b * inv(24.0)
     else
         return b * inv(4.0*z^3) * (sinh(z)-z) * sech(z/2.0)^2
     end

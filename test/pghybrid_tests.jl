@@ -52,11 +52,14 @@ end
 # Test that the mean and variance are correct for b=1, z=0 and b=2, z=1
 function test_mean_var()
     s = PolyaGammaHybridSampler(1, 0)
-    @test mean(s) ≈ 0
+    @test mean(s) ≈ 1/4
     @test var(s) ≈ 1/24
     s = PolyaGammaHybridSampler(2, 1)
     @test mean(s) ≈ 0.46211715726000976
     @test var(s) ≈ 0.06889329077704603
+    s = PolyaGammaHybridSampler(500, 0)
+    @test mean(s) ≈ 125
+    @test var(s) ≈ 125/6
 end
 
 # Run tests

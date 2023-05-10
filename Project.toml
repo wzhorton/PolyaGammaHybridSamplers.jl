@@ -1,7 +1,7 @@
 name = "PolyaGammaHybridSamplers"
 uuid = "c636ee4f-4591-4d8c-9fae-2dea21daa433"
 authors = ["W.Z. Horton"]
-version = "1.0.1"
+version = "1.0.2"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
