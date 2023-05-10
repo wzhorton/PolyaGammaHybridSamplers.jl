@@ -37,7 +37,7 @@ function rand_Jstar(z::Real, rng::AbstractRNG)
     t = 0.64 # paper recommends this constant
     K = 0.125*π^2 + 0.5*z^2
     p = 0.5*π*inv(K) * exp(-t*K)
-    q = 2*exp(-z) * cdf(InverseGaussian(inv(z), 1.0), t)
+    q = 2*exp(-z + logcdf(InverseGaussian(inv(z), 1.0), t))
     while true
         # Generate X
         if rand(rng, Uniform(0.0, 1.0)) < p/(p+q) #U ~ Uniform(0,1)
@@ -60,7 +60,7 @@ function rand_Jstar(z::Real, rng::AbstractRNG)
             n += 1
             if isodd(n)
                 S -= a_coefs(n, X, t)
-                if Y < S
+                if Y <= S
                     return X # accept X and exit
                 end
             else
