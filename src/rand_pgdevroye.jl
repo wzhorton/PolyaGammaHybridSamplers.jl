@@ -1,25 +1,22 @@
 """
-    rand_pgdevroye(b::Integer, z::Real, rng::AbstractRNG)
+    rand_pgdevroye(b::Integer, z::Real, [rng::AbstractRNG = Random.default_rng()]])
 
 Sample from a Polya-Gamma distribution using the Devroye method.
 
 # Arguments
 - `b::Integer`: the shape parameter
 - `z::Real`: the exponential tilting parameter
-- `rng::AbstractRNG`: random number generator object for `rand`
+- `rng::AbstractRNG`: optional random number generator object for `rand`
 
 # Returns
 - A sample from the Polya-Gamma distribution with shape parameter `b` and exponential tilting parameter `z`.
 
 # Notes
 - This method is exact, but is increasingly slower as `b` increases.
-- This function is not exported.
+- This sampler requires integer `b`.
+- Automatically selects the method when `b < 13` and is an integer.
 """
 function rand_pgdevroye(b::Integer, z::Real, rng::AbstractRNG)
-    if iszero(b) # b = 0 -> degenerate distribution at 0
-        return zero(z)
-    end 
-
     draw  = zero(z)
     for _ in Base.OneTo(b)
         draw += rand_Jstar(0.5*abs(z), rng) * 0.25
@@ -27,6 +24,9 @@ function rand_pgdevroye(b::Integer, z::Real, rng::AbstractRNG)
     return draw
 end
 
+function rand_pgdevroye(b::Integer, z::Real)
+    return rand_pgdevroye(b, z, Random.default_rng())
+end
 
 #----------------------------------#
 # Define auxiliary functions 
