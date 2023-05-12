@@ -31,7 +31,7 @@ The following year, a technical report written by [Windle et al. (2014)](https:/
 
 # Previous Code Implementations
 
-The authors of [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001) published the [BayesLogit](https://cran.r-project.org/web/packages/BayesLogit/index.html) R package with C++ code implementing the Devroye sampling method, later expanding it to include the techniques presented in [Windle et al. (2014)](https://arxiv.org/abs/1405.0506). The source code is available at the [BayesLogit GitHub site](https://github.com/jwindle/BayesLogit). However, it is important to note that, as of version 2.1, inline comments for the main sampling function, `rpg_hybrid`, state that the *alternative technique* code needs further review and/or development ([source](https://github.com/jwindle/BayesLogit/blob/master/src/polyagamma_wrapper.cpp), lines 138-141) and instead the *naive gamma mixture* is used for small, non-integer $b$ values.
+The authors of [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001) published the [BayesLogit](https://cran.r-project.org/web/packages/BayesLogit/index.html) R package with C++ code implementing the Devroye sampling method, later expanding it to include the techniques presented in [Windle et al. (2014)](https://arxiv.org/abs/1405.0506). The source code is available at the [BayesLogit GitHub site](https://github.com/jwindle/BayesLogit). However, it is important to note that, as of version 2.1, inline comments for the main sampling function, `rpg_hybrid`, state that the *alternative technique* code needs further review and/or development ([source](https://github.com/jwindle/BayesLogit/blob/master/src/polyagamma_wrapper.cpp), lines 138-141) and instead the *naive gamma mixture* is used for small, non-integer $b$ values combined with the *Devroye method* for integer $b>1$.
 
 Interest in the Pólya-Gamma distribution within the Julia community appears first in a [GitHub issues thread](https://github.com/JuliaStats/Distributions.jl/issues/685) started by a user called `currymj` under the main [Distributions.jl](https://github.com/JuliaStats/Distributions.jl/) repository. Ultimately, `currymj` developed a separate package called [PolyaGammaDistribution.jl](https://github.com/currymj/PolyaGammaDistribution.jl) that was essentially a direct translation of the [BayesLogit](https://cran.r-project.org/web/packages/BayesLogit/index.html) *Devroye method* code for integer $b$ parameters.
 
@@ -41,13 +41,15 @@ Over time, a handful of variations came about, including a [PolyaGammaDistributi
 
 # Scope of `PolyaGammaHybridSamplers.jl`
 
-Nearly all existing native Julia implemetations of the Pólya-Gamma distribution focus exclusively on the *Devroye method* sampler (except perhaps for this [PolyaGammaSamplers.jl branch](https://github.com/igutierrezm/PolyaGammaSamplers.jl/tree/sp-approximation)). It is an exact sampler and is quite efficient for small values of $b$, but results from [Windle et al. (2014)](https://arxiv.org/abs/1405.0506) suggest that it is potentially orders of magnitude slower than the *saddle-point sampler* approximation for larger values of $b$. Additionally, none of the packages considered a normal approximation for large $b$, which is extremely efficient. In short, there is no hybrid sampler available in Julia like there is in the original [BayesLogit](https://cran.r-project.org/web/packages/BayesLogit/index.html) R package. As the name implies, the `PolyaGammaHybridSamplers.jl` package aims to provide one. The hybrid sampler implemented here is similar to the one given by [Windle et al. (2014)](https://arxiv.org/abs/1405.0506): 
+As the name suggests, the `PolyaGammaHybridSamplers.jl` package attempts to fill a hole present in previously developed Julia packages by implementing other sampling techniques for the Pólya-Gamma distribution beyond the *Devroye method*. It centers around a hybrid sampler which selects the most appropriate sampling technique based on the value of $b$. The hybrid sampler is similar to the one given by [Windle et al. (2014)](https://arxiv.org/abs/1405.0506):
 
 | Sampler | Condition |
 | --- | --- |
-| Devroye Method | $b = 1,2,...,13$ |
-| Saddle-point Sampler| $b = 13,..., 170$ |
 | Normal Approximation | $b \ge 170$ |
+| Saddle-point Sampler| $13 \le b < 170$ |
+| Devroye Method | $b = 1,2,...,13$ |
+| Gamma Mixture | $0 < 1 < b$|
+| Devroye + Gamma Mixture | $1 < b < 13$ non-integer $b$ |
 
 To generate a random variate, create a sampler object and then use `rand` (vectorized versions of `rand` and `rand!` are also available):
 
@@ -56,17 +58,15 @@ pg = PolyaGammaHybridSampler(4, 1.5)
 data = rand(pg)
 ```
 
---**The current plan is for the hybrid sampler to require integers for the $b$ parameter**.-- However, the underlying *normal approximation* and *saddle-point sampler* routines do support non-integer inputs. Additionally, the type of sampler can controlled by including, for example, `SADDLEPOINT` as an argument: 
+The type of sampler can controlled by including, for example, `SADDLEPOINT` as an argument: 
 
 ```julia
 pg = PolyaGammaHybridSampler(4, 1.5, SADDLEPOINT)
 data = rand(pg)
 ```
-Other valid options include `HYBRID`, `DEVROYE`, and `NORMALAPPROX`. But be careful as no warning about the approximation quality or efficiency will be given.
-
-Perhaps in the future the *approximate technique* or the *gamma mixture* sampler will be implemented, maybe even with some clever multiple dispatching. However, this seems unlikely given that the vast majority of applications using the Pólya-Gamma distribution involve integer $b$, not to mention that the efficiency benefits of the *alternative technique* are pretty small and the fact that truncating the gamma mixture is "dangerous" according to [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001).
+Other valid options include `DEVROYE`, `NORMALAPPROX`, `GAMMAMIXTURE`, and `DEVROYEGAMMAMIXTURE`. But be careful as no warning about the approximation quality or efficiency will be given if the sampler is forced to use a technique that is not appropriate for the given parameters.
 
 
 # License Issue and Merging with Distributions.jl
 
-This package is effectively a translation of the original [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001) C++ code in the  package [BayesLogit](https://cran.r-project.org/web/packages/BayesLogit/index.html), including the later developments described in [Windle et al. (2014)](https://arxiv.org/abs/1405.0506). Some structural inspiration is also taken from the Julia packages [PolyaGammaDistribution.jl](https://github.com/currymj/PolyaGammaDistribution.jl) (`currymj`), [PolyaGammaSamplers.jl](https://github.com/igutierrezm/PolyaGammaSamplers.jl) (`igutierrezm`), and [AugmentedGaussianProcesses.jl](https://github.com/theogf/AugmentedGaussianProcesses.jl) (`theogf`). All of these packages are licensed under the GPL-3.0 license, except for [AugmentedGaussianProcesses.jl](https://github.com/theogf/AugmentedGaussianProcesses.jl) which is licensed under the [MIT "Expat" license](https://github.com/theogf/AugmentedGaussianProcesses.jl/blob/master/LICENSE.md). Therefore, the `PolyaGammaHybridSamplers.jl` package is necessarily licensed under GPL-3.0. The question of whether this code can merged into [Distributions.jl](https://github.com/JuliaStats/Distributions.jl/) has likely been answered in this [GitHub issues thread](https://github.com/JuliaStats/Distributions.jl/issues/1440) started by `theogf`: the MIT license of Julia's base environment conflicts with the GPL-3.0 requirements, so probably not.
+This package is largly a translation of the original [Polson et al. (2013)](http://www.tandfonline.com/doi/abs/10.1080/01621459.2013.829001) C++ code in the  package [BayesLogit](https://cran.r-project.org/web/packages/BayesLogit/index.html), including the later developments described in [Windle et al. (2014)](https://arxiv.org/abs/1405.0506). Some structural inspiration is also taken from the Julia packages [PolyaGammaDistribution.jl](https://github.com/currymj/PolyaGammaDistribution.jl) (`currymj`), [PolyaGammaSamplers.jl](https://github.com/igutierrezm/PolyaGammaSamplers.jl) (`igutierrezm`), and [AugmentedGaussianProcesses.jl](https://github.com/theogf/AugmentedGaussianProcesses.jl) (`theogf`). All of these packages are licensed under the GPL-3.0 license, except for [AugmentedGaussianProcesses.jl](https://github.com/theogf/AugmentedGaussianProcesses.jl) which is licensed under the [MIT "Expat" license](https://github.com/theogf/AugmentedGaussianProcesses.jl/blob/master/LICENSE.md). Therefore, the `PolyaGammaHybridSamplers.jl` package is necessarily licensed under GPL-3.0. The question of whether this code can merged into [Distributions.jl](https://github.com/JuliaStats/Distributions.jl/) has likely been answered in this [GitHub issues thread](https://github.com/JuliaStats/Distributions.jl/issues/1440) started by `theogf`: the MIT license of Julia's base environment conflicts with the GPL-3.0 requirements, so probably not.
