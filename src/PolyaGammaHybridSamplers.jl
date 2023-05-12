@@ -5,10 +5,10 @@ using Random
 using SpecialFunctions
 
 export PolyaGammaHybridSampler
-export PGSamplingMethod, HYBRID, DEVROYE, SADDLEPOINT, NORMALAPPROX
-export rand_pggammasum
+export PGSamplingMethod, DEVROYE, SADDLEPOINT, NORMALAPPROX, GAMMASUM, DEVROYEPLUSGAMMASUM 
+export rand_pggammasum, rand_pgdevroye, rand_pgsaddlepoint, rand_pgnormalapprox
 
-@enum PGSamplingMethod HYBRID DEVROYE SADDLEPOINT NORMALAPPROX
+@enum PGSamplingMethod DEVROYE SADDLEPOINT NORMALAPPROX GAMMASUM DEVROYEPLUSGAMMASUM 
 
 include("rand_pgdevroye.jl")
 include("rand_pgsaddlepoint.jl")

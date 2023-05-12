@@ -1,5 +1,5 @@
 """
-    rand_pgsaddlepoint(b::Real, z::Real, rng::AbstractRNG)
+    rand_pgsaddlepoint(b::Real, z::Real, [rng::AbstractRNG = Random.default_rng()])
 
 Sample from a Polya-Gamma distribution using the saddlepoint approximation method.
 
@@ -12,19 +12,19 @@ Sample from a Polya-Gamma distribution using the saddlepoint approximation metho
 - A sample from the Polya-Gamma distribution with shape parameter `b` and exponential tilting parameter `z`.
 
 # Notes
-- This method is an approximation, but very efficient for large `b`.
-- This method is recommended for `b > 13`, however no warning is given if `b` is too small.
-- This method supports non-integer `b`.
-- This function is not exported.
+- This method is an approximation that supports non-integer `b` and is quite efficient for large `b`.
+- Automatically selects this method when `b >= 13`.
 """
 function rand_pgsaddlepoint(b::Real, z::Real, rng::AbstractRNG)
-    if iszero(b) # b = 0 -> degenerate distribution at 0
-        return zero(z)
-    elseif b < 1
+    if b < 1
         throw(DomainError(b, "Saddlepoint approximation is only valid for b >= 1"))
     end
 
     return rand_Jstar_tilted(b, 0.5*abs(z), rng) * 0.25
+end
+
+function rand_pgsaddlepoint(b::Real, z::Real)
+    return rand_pgsaddlepoint(b, z, Random.default_rng())
 end
 
 

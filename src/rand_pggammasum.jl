@@ -15,11 +15,9 @@ Sample from a Polya-Gamma distribution using the truncated sum of gammas represe
 - This method supports non-integer `b` but is only an approximation, meant only for b < 1
 - No warning is given if `b` is too large.
 - The sum is truncated to 200 terms according to the paper's recommendation.
+- Automatically selects this method when `b < 1` or when used in combination with the devroye method for non-integer `b`.
 """
 function rand_pgpggammasum(b::Real, z::Real, rng::AbstractRNG)
-    if iszero(b) # b = 0 -> degenerate distribution at 0
-        return zero(z)
-    end
     trunc_level = 200 # see paper
     total = zero(z)
     for k in 1:trunc_level
