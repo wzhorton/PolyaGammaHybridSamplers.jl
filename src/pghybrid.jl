@@ -85,7 +85,7 @@ end
 function Base.rand(rng::AbstractRNG, s::PolyaGammaHybridSampler)
     if iszero(s.b) # b = 0 -> degenerate distribution at 0
         return zero(s.z)
-    elseif s.method = NORMALAPPROX
+    elseif s.method == NORMALAPPROX
         return rand_pgnormalapprox(s.b, s.z, rng)
     elseif s.method == SADDLEPOINT
         return rand_pgsaddlepoint(s.b, s.z, rng)
