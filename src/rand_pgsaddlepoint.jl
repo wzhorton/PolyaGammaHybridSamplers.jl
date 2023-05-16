@@ -78,7 +78,7 @@ function rand_Jstar_tilted(b::Real, z::Real, rng::AbstractRNG)
          p_igauss(md, inv(rt2rl), b)
 
     wr = exp(0.5 * log(ar) + lcn + (-b * log(b * rr) + b * ir - b * log(md) + loggamma(b)) +
-         logccdf(Gamma(b, inv(b*rr)), md))
+        StatsFuns.RFunctions.gammalogccdf(b, inv(b*rr), md))
 
     wt = wl + wr
     pl = wl * inv(wt)
