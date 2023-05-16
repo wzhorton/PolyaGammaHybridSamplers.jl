@@ -70,11 +70,15 @@ function rand_Jstar_tilted(b::Real, z::Real, rng::AbstractRNG)
     lcn = 0.5 * log(0.5 * b *inv(π))
     rt2rl = sqrt(2 * rl)
 
+    if abs(z) > 1e16 && iszero(K2md) # bypass for numerical stability
+        return rtigauss(inv(rt2rl), b, md, rng)
+    end
+
     wl = exp(0.5 * log(al) - b * rt2rl + b * il + 0.5 * b * inv(md)) *
          p_igauss(md, inv(rt2rl), b)
 
-    wr = exp(0.5 * log(ar) + lcn + (-b * log(b * rr) + b * ir - b * log(md) + loggamma(b))) *
-         (1.0 - cdf(Gamma(b, inv(b*rr)), md))
+    wr = exp(0.5 * log(ar) + lcn + (-b * log(b * rr) + b * ir - b * log(md) + loggamma(b)) +
+         logccdf(Gamma(b, inv(b*rr)), md))
 
     wt = wl + wr
     pl = wl * inv(wt)
@@ -263,7 +267,7 @@ function phi_func(x, z)
     u = 0.5 * v
     t = u + 0.5 * z^2
 
-    phi_val = log(cosh(abs(z))) - log(cos_rt(v)) - t * x
+    phi_val = logcosh(abs(z)) - log_cos_rt(v) - t * x
     phi_der = -t
 
     return phi_val, phi_der
@@ -385,4 +389,26 @@ function ltgamma(shape, rate, trunc, rng::AbstractRNG)
     end
 
     return trunc * (x / b)
+end
+
+#---------------------------------#
+# Added helper functions
+#---------------------------------#
+
+function logcosh(x::Real)
+    if x < 0
+        return -log(2) - x + log1pexp(2*x)
+    else
+        return -log(2) + x + log1pexp(-2*x)
+    end
+end
+
+function log_cos_rt(v)
+    r = sqrt(abs(v))
+    if v >= 0
+        y = log(cos(r))
+    else
+        y = logcosh(r)
+    end
+    return y
 end

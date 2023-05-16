@@ -3,6 +3,7 @@ module PolyaGammaHybridSamplers
 using Distributions
 using Random
 using SpecialFunctions
+using StatsFuns
 
 export PolyaGammaHybridSampler
 export PGSamplingMethod, DEVROYE, SADDLEPOINT, NORMALAPPROX, GAMMASUM, DEVROYEPLUSGAMMASUM 
