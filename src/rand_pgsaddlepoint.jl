@@ -291,7 +291,7 @@ function sp_approx(x, n, z)
     u = 0.5 * v
     t = u + 0.5 * z^2
 
-    phi = log(cosh(z)) - log(cos_rt(v)) - t * x
+    phi = logcosh(z) - log_cos_rt(v) - t * x
 
     K2 = 0.0
     if abs(v) >= 1e-6
