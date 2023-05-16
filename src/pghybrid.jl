@@ -76,8 +76,8 @@ end
 function Distributions.var(s::PolyaGammaHybridSampler)
     if iszero(s.z)
         return s.b / 24.0
-    elseif isinf(sinh(s.z))
-        return zero(s.z) # extremely large z -> 0
+    elseif isinf(sinh(s.z)) # sinh(z)*sech(0.5*z)^2 -> 2*sign(z) as z -> inf
+        return s.b * 0.25 * (inv(s.z^3) * sign(s.z)*2 - inv(s.z)^2 * sech(0.5*s.z)^2)
     else 
         return s.b * 0.25 * inv(s.z^3) * (sinh(s.z)-s.z) * sech(0.5*s.z)^2
     end
