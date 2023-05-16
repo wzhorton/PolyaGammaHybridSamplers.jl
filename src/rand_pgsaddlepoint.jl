@@ -70,7 +70,7 @@ function rand_Jstar_tilted(b::Real, z::Real, rng::AbstractRNG)
     lcn = 0.5 * log(0.5 * b *inv(π))
     rt2rl = sqrt(2 * rl)
 
-    if abs(z) > 1e16 && iszero(K2md) # bypass for numerical stability
+    if abs(z) > 1e16 && K2md <= zero(K2md) # bypass for numerical stability
         return rtigauss(inv(rt2rl), b, md, rng)
     end
 

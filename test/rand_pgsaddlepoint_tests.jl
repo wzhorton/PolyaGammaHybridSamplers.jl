@@ -13,7 +13,15 @@ function test_rand_pgsaddlepoint_mean_var()
     @test var(draws) ≈ var(s) rtol=0.005
 end
 
+function test_pgsaddlepoint_underflow()
+    b = 17
+    z = -6.128797345912032e16
+    s = PolyaGammaHybridSamplers.PolyaGammaHybridSampler(b, z, PolyaGammaHybridSamplers.SADDLEPOINT)
+    @test rand(s) ≈ 8.158207422758152e-18
+end
+
 # Run tests
 @testset "Sampling method tests for Saddlepoint" begin
     test_rand_pgsaddlepoint_mean_var()
+    test_pgsaddlepoint_underflow()
 end
