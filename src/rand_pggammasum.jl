@@ -17,7 +17,7 @@ Sample from a Polya-Gamma distribution using the truncated sum of gammas represe
 - The sum is truncated to 200 terms according to the paper's recommendation.
 - Automatically selects this method when `b < 1` or when used in combination with the devroye method for non-integer `b`.
 """
-function rand_pgpggammasum(b::Real, z::Real, rng::AbstractRNG)
+function rand_pggammasum(b::Real, z::Real, rng::AbstractRNG)
     trunc_level = 200 # see paper
     total = zero(z)
     for k in 1:trunc_level
@@ -26,6 +26,6 @@ function rand_pgpggammasum(b::Real, z::Real, rng::AbstractRNG)
     return 2 * total
 end
 
-function rand_pgpggammasum(b::Real, z::Real)
-    return rand_pgpggammasum(b, z, Random.default_rng())
+function rand_pggammasum(b::Real, z::Real)
+    return rand_pggammasum(b, z, Random.default_rng())
 end
